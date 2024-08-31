@@ -34,7 +34,7 @@ class UserData {
 Future<List<UserData>> fetchUserData() async {
   final String baseUrl = 'http://localhost:8000/get_user_detels.php';//http://localhost:8000/get_user_detels.php    http://localhost:8080/get_user_details_506.php.bak.json
   final String ip = 'admin.halasat-ftth.iq'; //  213.183.63.188 admin.halasat-ftth.iq
-  final String username = 'OMC_Pst_Dis@506_510'; //admin@palestine  OMC_Pst_Dis@506_510
+  final String username = 'OMC_Pst_Dis@506_510';
   final String password = '69QV1Ucg<\$1y'; //48654265     69QV1Ucg<\$1y
 
 
