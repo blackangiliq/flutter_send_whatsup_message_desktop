@@ -12,10 +12,8 @@ dependencies:
   file_picker: ^8.1.2
   path_provider: ^2.1.4
   http: ^0.13.3
-  encrypt: ^5.0.0
-  tuple: ^2.0.0 # for Tuple2 class
-  crypto: ^3.0.1
-  pointycastle: ^3.0.0
+  cron: ^0.6.1
+  intl: ^0.19.0
   cupertino_icons: ^1.0.6
   win32_registry: ^1.1.4
   win32:

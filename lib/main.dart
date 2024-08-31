@@ -11,6 +11,7 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   isServerRunning = prefs.getBool('isServerRunning') ?? false;
+  AotuoMaticSending = prefs.getBool('AotuoMaticSending') ?? false;
   port_txt = prefs.getString('serverPort') ?? port_txt;
 
   runApp(MyApp());

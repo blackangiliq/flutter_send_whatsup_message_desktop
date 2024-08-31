@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:codecreate_whatsapp_bulk_sender/message_hestory.dart';
-import 'package:codecreate_whatsapp_bulk_sender/sass4/aes_controller.dart';
-import 'package:codecreate_whatsapp_bulk_sender/sass4/sass_connector.dart';
+import 'package:codecreate_whatsapp_bulk_sender/sass4/run_php_server.dart';
+import 'package:codecreate_whatsapp_bulk_sender/sass4/sas4_helper.dart';
 import 'package:codecreate_whatsapp_bulk_sender/setting_page.dart';
+import 'package:codecreate_whatsapp_bulk_sender/sheard_var.dart';
 import 'package:codecreate_whatsapp_bulk_sender/webview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,8 +12,7 @@ import 'package:screenshot/screenshot.dart';
 import 'dart:async';
 import 'package:webview_windows/webview_windows.dart';
 import 'send_message_helper.dart';
-import 'sheard_var.dart';
-import 'sass4/aes_controller.dart';
+import 'sass4/sas4_users_screen.dart';
 late _WhatsAppSenderState _whatsAppSenderState;
 
 class MyApp extends StatelessWidget {
@@ -79,6 +79,7 @@ class _WhatsAppSenderState extends State<WhatsAppSender> {
     isServerRunning ? _startServer() : null ;
   }
 
+  final server = PhpServer();
 
 
   void _showSendMessageDialog() {
@@ -108,7 +109,7 @@ class _WhatsAppSenderState extends State<WhatsAppSender> {
             SizedBox(height: 16.0),
             TextField(
               controller: _delayController,
-              decoration: InputDecoration(labelText: 'Delay (seconds)'),
+              decoration: InputDecoration(labelText: 'التأخير بين كل رسالة ورسالة (بالثواني)'),
               keyboardType: TextInputType.number,
             ),
           ],
@@ -421,7 +422,7 @@ class _WhatsAppSenderState extends State<WhatsAppSender> {
                       crossAxisAlignment: CrossAxisAlignment.center,                      children: [
                         ElevatedButton(
                           onPressed: _isSending ? null : _showSendMessageDialog,
-                          child: Text(_isSending ? 'جاري الارسال...' : 'ارسال'),
+                          child: Text(_isSending ? 'جاري الارسال...' : 'ارسال رسائل بشكل يدوي'),
                         ),
                         ElevatedButton(
                           onPressed: () => web_controller.openDevTools(),
@@ -452,6 +453,33 @@ class _WhatsAppSenderState extends State<WhatsAppSender> {
                           },
                           child: Text('سجل الرسائل'),
                         ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            server.startServer();
+                            await Future.delayed(Duration(seconds: 1));
+                            showSas4SusersList(context);
+
+                          },
+                          child: Text('ارسال رسائل لمشتركين Sas4'),
+                        ),  ElevatedButton(
+                          onPressed: () async {
+                            await fetchUserData();
+                            allUsers.forEach((action){
+                              if  (action.phone != null && action.phone.isNotEmpty)
+                              print(formatPhoneNumber( action.phone));
+
+                            });
+
+
+                          },
+                          child: Text(' الاكسباير تجربة لستة'),
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     server.startServer();
+                        //   },
+                        //   child: Text('test'),
+                        // ),
 
 
 
@@ -577,6 +605,31 @@ class _WhatsAppSenderState extends State<WhatsAppSender> {
       print('Selected phone number: $selectedPhone');
       sendMessage(selectedPhone, "");
     }
+  }
+
+
+  Future<void> showSas4SusersList(BuildContext context) async {
+     showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SizedBox(
+            width: double.maxFinite,
+            height: MediaQuery.of(context).size.height - 100, // Adjust height as needed
+            child: Sass4UserListScreen(), // Embed the MessagesScreen here
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog without returning any value
+              },
+            ),
+          ],
+        );
+      },
+    );
+
   }
   @override
   void dispose() {
